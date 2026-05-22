@@ -28,13 +28,14 @@ class Sigmoid:
 
         self.A = 1 / (1 + np.exp(-Z))
         return self.A
-    
+
     def backward(self, dLdA):
 
         dAdZ = self.A - np.square(self.A)
         dLdZ = dLdA * dAdZ
 
         return dLdZ
+
 
 class Tanh:
     """
@@ -45,15 +46,16 @@ class Tanh:
     """
     def forward(self, Z):
 
-        self.A = (np.exp(Z) - np.exp(-Z)) / (np.exp(Z) + np.exp(-Z))
+        self.A = np.tanh(Z)
         return self.A
-    
+
     def backward(self, dLdA):
 
         dAdZ = 1 - np.square(self.A)
         dLdZ = dLdA * dAdZ
 
         return dLdZ
+
 
 class ReLU:
     """
@@ -66,7 +68,7 @@ class ReLU:
 
         self.A = np.maximum(0, Z)
         return self.A
-    
+
     def backward(self, dLdA):
 
         dAdZ = np.where(self.A > 0, np.ones(self.A.shape), np.zeros(self.A.shape))
@@ -82,12 +84,12 @@ class GELU:
     Read the writeup for further details on GELU.
     """
     def forward(self, Z):
-
+        
         self.Z = Z
         self.A = 1 / 2 * self.Z * (1 + erf(self.Z / np.sqrt(2)))
 
         return self.A
-    
+
     def backward(self, dLdA):
 
         dAdZ = 1 / 2 * (1 + erf(self.Z / np.sqrt(2))) + self.Z / np.sqrt(2 * np.pi) * np.exp(-np.square(self.Z) / 2)
@@ -108,7 +110,6 @@ class Softmax:
         Remember that Softmax does not act element-wise.
         It will use an entire row of Z to compute an output element.
         """
-
         (N, _) = Z.shape
         self.A = np.zeros(Z.shape)
 
