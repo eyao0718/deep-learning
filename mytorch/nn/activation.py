@@ -36,26 +36,30 @@ class Sigmoid:
 
         return dLdZ
 
-
 class Tanh:
     """
-    On same lines as above:
-    Define 'forward' function
-    Define 'backward' function
-    Read the writeup for further details on Tanh.
+    Modified Tanh to work with BPTT.
+    The tanh(x) result has to be stored elsewhere otherwise we will
+    have to store results for multiple timesteps in this class for each cell,
+    which could be considered bad design.
+
+    Now in the derivative case, we can pass in the stored hidden state and
+    compute the derivative for that state instead of the "current" stored state
+    which could be anything.
     """
     def forward(self, Z):
 
-        self.A = np.tanh(Z)
-        return self.A
+        self.A = Z
+        self.tanhVal =  np.tanh(self.A)
+        return self.tanhVal
 
-    def backward(self, dLdA):
-
-        dAdZ = 1 - np.square(self.A)
-        dLdZ = dLdA * dAdZ
-
-        return dLdZ
-
+    def backward(self, dLdA, state=None):
+        if state is not None:
+            dAdZ = 1 - state*state
+            return dAdZ * dLdA
+        else:
+            dAdZ = 1 - self.tanhVal * self.tanhVal
+            return dAdZ * dLdA
 
 class ReLU:
     """
