@@ -11,3 +11,4 @@ from .flatten import Flatten
 from .CTC import CTC, CTCLoss
 from .gru_cell import GRUCell
 from .rnn_cell import RNNCell
+from .dropout import Dropout
