@@ -3,7 +3,6 @@ import numpy as np
 
 class Softmax:
     '''
-    DO NOT MODIFY! AN INSTANCE IS ALREADY SET IN THE Attention CLASS' CONSTRUCTOR. USE IT!
     Performs softmax along the last dimension
     '''
     def forward(self, Z):
@@ -43,10 +42,12 @@ class Softmax:
         return dLdZ.reshape(dLdA_original_shape)
 
 class Attention:
-        
+        """
+        Scaled Dot Product Self-Attention
+        """
         def __init__(self, weights_keys, weights_queries, weights_values):
             """
-            Initialize instance variables. Refer to writeup for notation.
+            Initialize instance variables.
             input_dim = D, key_dim = query_dim = D_k, value_dim = D_v
 
             Argument(s)
@@ -62,20 +63,14 @@ class Attention:
             self.W_q = weights_queries
             self.W_v = weights_values
 
-            # Use this object to perform softmax related operations.
-            # It performs softmax over the last dimension which is what you'll need.
             self.softmax = Softmax()
 
         def forward(self, X):
             """
             Compute outputs of the self-attention layer.
             Stores keys, queries, values, raw and normalized attention weights.
-            Refer to writeup for notation.
             batch_size = B, seq_len = T, input_dim = D, value_dim = D_v
-
-            Note that input to this method is a batch not a single sequence, so doing a transpose using .T can yield unexpected results.
-            You should permute only the required axes.
-
+            
             Input
             -----
             X (torch.tensor, dim = (B, T, D)): Input batch
@@ -84,6 +79,7 @@ class Attention:
             ------
             X_new (torch.tensor, dim = (B, T, D_v)): Output batch
             """
+            
             self.X = X
         
             # Compute the values of Key, Query and Value
@@ -112,11 +108,7 @@ class Attention:
             """
             Backpropogate derivatives through the self-attention layer.
             Stores derivatives wrt keys, queries, values, and weight matrices.
-            Refer to writeup for notation.
             batch_size = B, seq_len = T, input_dim = D, value_dim = D_v
-
-            Note that input to this method is a batch not a single sequence, so doing a transpose using .T can yield unexpected results.
-            You should permute only the required axes.
 
             Input
             -----
@@ -126,6 +118,7 @@ class Attention:
             ------
             dLdX (torch.tensor, dim = (B, T, D)): Derivative of the divergence wrt attention layer inputs
             """
+            
             # derivatives wrt attention weights (normalized and raw)
             dLdA_sig = dLdXnew @ self.V.permute((0, 2, 1))
             dLdA_w = self.softmax.backward(dLdA_sig) * 1 / np.sqrt(self.D_k)
