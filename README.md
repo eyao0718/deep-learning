@@ -1,3 +1,3 @@
 # Deep Learning
 
-nn modules + large-scale dl projects from scratch
+nn modules + dl r&d from scratch
